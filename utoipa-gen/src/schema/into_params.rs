@@ -159,7 +159,10 @@ impl ToTokens for ParamType<'_> {
                 tokens.extend(param_type.into_token_stream())
             }
             Some(GenericType::Map) => {
-                abort!(ty.ident, "maps are not supported parameter receiver types")
+                // Maps are treated just as generic objects without types. There is no Map type in OpenAPI spec.
+                tokens.extend(quote! {
+                    utoipa::openapi::ObjectBuilder::new()
+                });
             }
         };
     }
